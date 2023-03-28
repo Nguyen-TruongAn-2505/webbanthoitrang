@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="page_head(title)">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scole=1.0"/>
+
+    <title>[[${title}]]</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}"/>
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+
+</head>
+<body>
+
+<!--<th>-->
+<!--    &lt;!&ndash;can giu thong tin  phan trang cong voi trang hien tai va sau do la 2 tham so cho truong sap xep&ndash;&gt;-->
+<!--    &lt;!&ndash;va thu muc sap xep&ndash;&gt;-->
+<!--    <a th:if="${sortField != 'id'}" class="text-white"-->
+<!--       th:href="@{'/users/page/' +${currentPage} + '?sortField=id&sortDir='-->
+<!--                        + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">-->
+<!--        ID-->
+<!--    </a>-->
+
+<!--    <a th:if="${sortField == 'id'}" class="text-white"-->
+<!--       th:href="@{'/users/page/' +${currentPage} + '?sortField=id&sortDir='-->
+<!--                        + ${reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">-->
+<!--        ID-->
+<!--    </a>-->
+
+<!--    <span th:if="${sortField == 'id'}"-->
+<!--          th:class="${sortDir == 'asc' ? 'fas fa-sort-up':'fas fa-sort-down'}"></span>-->
+<!--</th>-->
+
+
+<th th:fragment="column_link(fieldName, columnLabel)">
+    <!--can giu thong tin  phan trang cong voi trang hien tai va sau do la 2 tham so cho truong sap xep-->
+    <!--va thu muc sap xep-->
+    <!--sortField != fieldName ? sortDir : reverseSortDir: neu sortField ko phai la ten truong nay, thi dao nguoc thanh reverseSortDir-->
+    <a class="text-white"
+       th:href="@{'/users/page/' +${currentPage} + '?sortField=' + ${fieldName} + '&sortDir='
+                        + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+        [[${columnLabel}]]
+    </a>
+
+    <span th:if="${sortField == fieldName}"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up':'fas fa-sort-down'}"></span>
+</th>
+
+<!--<a class="page-link"-->
+<!--   th:href="@{'/users/page/1?sortField='+ ${sortField}+'&sortDir='+${sortDir} +
+        ${keyword != null ? '&keyword=' + keyword : ''}}">Previous</a>-->
+
+<a th:fragment="page-link(pageNum,label)"
+   class="page-link"
+   th:href="@{'/users/page/' + ${pageNum} +  '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}  + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${label}]]</a>
+
+
+<div th:fragment="footer" class="text-center m-3">
+    <p> Ringo Control Panel -copy right &copy - Ringo</p>
+</div>
+
+</body>
+</html>

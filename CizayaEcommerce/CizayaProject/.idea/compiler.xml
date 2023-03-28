@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="CizayaCommon" />
+        <module name="CizayaBackEnd" />
+        <module name="CizayaFrontEnd" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="CizayaBackEnd" target="15" />
+      <module name="CizayaCommon" target="15" />
+      <module name="CizayaFrontEnd" target="15" />
+      <module name="CizayaProject" target="1.5" />
+      <module name="CizayaWebParent" target="15" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="CizayaBackEnd" options="-parameters" />
+      <module name="CizayaCommon" options="-parameters" />
+      <module name="CizayaFrontEnd" options="-parameters" />
+    </option>
+  </component>
+</project>

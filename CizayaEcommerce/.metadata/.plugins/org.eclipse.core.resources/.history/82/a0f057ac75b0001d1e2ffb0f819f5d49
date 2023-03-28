@@ -1,0 +1,60 @@
+package com.cizaya.admin.user;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.annotation.Rollback;
+
+import com.cizaya.common.entity.Role;
+import com.cizaya.common.entity.User;
+
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+@Rollback(false)
+public class UserRepositorytests {
+
+	@Autowired
+	private UserRepository repo;
+
+	@Autowired
+	private TestEntityManager entityManager;
+
+	// test save user voi entitymanager test de chon role (1 user 1 role)
+	@Test
+	public void testCreateNewUserWithOneRole() {
+		entityManager.find(Role.class, 1);
+		User userAnnt = new User("Antao6125@gmail.com", "Annt6125", "An", "Nguyen Truong");
+		userAnnt.addRole(null);
+
+		User savedUser = repo.save(userAnnt);
+		assertThat(savedUser.getId()).isGreaterThan(0);
+	}
+
+	// 1user 2role
+	@Test
+	public void testCreateNewUserWithTwoRole() {
+		User userBaolq = new User("Baolq1020@gmail.com", "Bao2020", "Bao", "Luong Quoc");
+		Role roleEditor = new Role(3);
+		Role roleAssistant = new Role(5);
+		userBaolq.addRole(roleEditor);
+		userBaolq.addRole(roleAssistant);
+
+		User savedUser = repo.save(userBaolq);
+
+		assertThat(savedUser.getId()).isGreaterThan(0);
+	}
+
+	@Test
+	public void testListAllUser() {
+		Iterable<User> listUser = repo.findAll();
+		listUser.forEach(user->System.out.println(user));
+		
+	}
+}

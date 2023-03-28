@@ -1,0 +1,5 @@
+package com.cizaya.admin.user;
+
+public class UserRestController {
+
+}

@@ -1,0 +1,23 @@
+*.icon-while {
+	color: white
+}
+
+*.icon-black {
+	color: black
+}
+
+*.icon-red {
+	color: red
+}
+
+*.icon-darkviolet {
+	color: darkviolet
+}
+
+*.icon-limegreen {
+	color: limegreen
+}
+
+*.icon-limeblue {
+	color: skyblue
+}

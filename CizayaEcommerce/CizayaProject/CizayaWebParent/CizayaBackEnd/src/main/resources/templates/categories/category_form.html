@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head(${pageTitle})"/>
+
+<body>
+<div class="container-fluid">
+    <div th:replace="navigation :: menu"></div>
+</div>
+<div>
+    <h2>Manager Categories | [[${pageTitle}]]</h2>
+</div>
+
+<!--thong bao mesage-->
+<div th:if="${message != null}" class="alert alert-success text-center">
+    [[${message}]]
+</div>
+
+<div>
+    <!--form dang nhap -->
+    <!--enctype="multipart/form-data" cho phep tai len tep cho bieu mau-->
+    <form th:action="@{/categories/save}" method="post" style="max-with:500px; margin: 0 auto"
+          enctype="multipart/form-data" th:object="${category}">
+        <!--kiem tra tinh duy nhat email nguoi dung-->
+        <input type="hidden" th:field="*{id}">
+        <div class=" border border-secondary rounted p-3">
+
+            <!--form Email -->
+            <div class="form-group row">
+                <div class="col-sm-2"></div>
+                <label class="col-sm-2 col-form-label">Category Name:</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" th:field="*{name}" required minlength="3"
+                           maxlength="128"/>
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+
+            <!--form FirstName -->
+            <div class="form-group row">
+                <div class="col-sm-2"></div>
+                <label class="col-sm-2 col-form-label">Alias:</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" th:field="*{alias}" required minlength="3"
+                           maxlength="64"/>
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+
+            <!--form LastName -->
+            <div class="form-group row">
+                <div class="col-sm-2"></div>
+                <label class="col-sm-2 col-form-label">Parent Category:</label>
+                <div class="col-sm-6">
+                    <select class="form-control" th:field="*{parent}">
+                        <option value="0">[No Parent]</option>
+                        <th:block th:each="cat : ${listCategorries}">
+                            <option th:value="${cat.id}">[[${cat.name}]]</option>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+
+
+            <!--form Photos -->
+            <div class="form-group row">
+                <div class="col-sm-2"></div>
+                <label class="col-sm-2 col-form-label">Images:</label>
+                <div class="col-sm-6">
+                    <input type="hidden" th:field="*{image}"/>
+                    <input type="file" id="fileImage" name="fileImage" accept="image/png, image/jpeg" required class="mb-2"/>
+
+                    <!--thumbnail de hien thi cau hinh cua anh-->
+                    <div class="mt-2">
+                        <img id="thumbnail" alt="Image preview" th:src="@{/images/image-thumbnail.png}"
+                             class="img-fluid"/>
+                    </div>
+                </div>
+                <div class="col-sm-2"></div>
+
+            </div>
+
+            <!--form Enable -->
+            <div class="form-group row">
+                <div class="col-sm-2"></div>
+                <label class="col-sm-2 col-form-label">Enabled:</label>
+                <div class="col-sm-6" style="margin-top: 8px;">
+                    <input type="checkbox" th:field="*{enabled}"/>
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+
+            <div class="text-center">
+                <input type="submit" value="Save" class="btn btn-primary m-3"/>
+                <input type="button" value="Cancel" class="btn btn-secondary" id="buttonCancel"/>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+<script type="text/javascript">
+    moduleURL = "[[@{/categories}]]";
+
+
+</script>
+<script th:src="@{/js/common_form.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+package com.cizaya.admin;
+
+import java.nio.file.Path;
+
+import java.nio.file.Paths;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class MvcConfig implements WebMvcConfigurer {
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		// de hien thi mot thu muc tren he thong tep- de khach hang co the truy cap duoc
+		// can lam nhu sau
+		// 1 khai bao thu muc
+		String dirName = "user-photos";
+		Path userPhotosDir = Paths.get(dirName);
+		// 2 lay duong dan tuyet doi
+		String userPhotosPath = userPhotosDir.toFile().getAbsolutePath();
+
+		// 3 goi phuong thuc registry
+		// /** cho phep tat ca cac tep trong thu muc nay , se co san cho cac clients web
+		// khac
+		// addResourceLocations de anh xa thu muc nay voi duong dan vat ly tuyet doi
+		// sau do vao entity user viet mot phuong thuc getter moi trong lop thuc the
+		// nguoi dung de tra ve duong dan hinh anh
+		registry.addResourceHandler("/" + dirName + "/**").addResourceLocations("file:/" + userPhotosPath + "/");
+	}
+
+}

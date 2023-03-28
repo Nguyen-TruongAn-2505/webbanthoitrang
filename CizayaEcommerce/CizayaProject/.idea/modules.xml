@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CizayaWebParent/CizayaBackEnd/CizayaBackEnd.iml" filepath="$PROJECT_DIR$/CizayaWebParent/CizayaBackEnd/CizayaBackEnd.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CizayaCommon/CizayaCommon.iml" filepath="$PROJECT_DIR$/CizayaCommon/CizayaCommon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CizayaWebParent/CizayaFrontEnd/CizayaFrontEnd.iml" filepath="$PROJECT_DIR$/CizayaWebParent/CizayaFrontEnd/CizayaFrontEnd.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CizayaProject.iml" filepath="$PROJECT_DIR$/CizayaProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CizayaWebParent/CizayaWebParent.iml" filepath="$PROJECT_DIR$/CizayaWebParent/CizayaWebParent.iml" />
+    </modules>
+  </component>
+</project>

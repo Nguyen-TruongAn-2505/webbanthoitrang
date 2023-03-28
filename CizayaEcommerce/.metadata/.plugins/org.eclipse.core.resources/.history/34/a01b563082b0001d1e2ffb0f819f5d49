@@ -1,0 +1,111 @@
+package com.cizaya.admin.user;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder.In;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.annotation.Rollback;
+
+import com.cizaya.common.entity.Role;
+import com.cizaya.common.entity.User;
+
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+@Rollback(false)
+public class UserRepositorytests {
+
+	@Autowired
+	private UserRepository repo;
+
+	@Autowired
+	private TestEntityManager entityManager;
+
+	// test save user voi entitymanager test de chon role (1 user 1 role)
+	@Test
+	public void testCreateNewUserWithOneRole() {
+		Role roleAdmin = entityManager.find(Role.class, 1);
+		User userAnnt = new User("Antao6125@gmail.com", "Annt6125", "An", "Nguyen Truong");
+		userAnnt.addRole(roleAdmin);
+
+		User savedUser = repo.save(userAnnt);
+		assertThat(savedUser.getId()).isGreaterThan(0);
+	}
+
+	// 1user 2role
+	@Test
+	public void testCreateNewUserWithTwoRole() {
+		User userBaolq = new User("Baolq1020@gmail.com", "Bao2020", "Bao", "Luong Quoc");
+		Role roleEditor = new Role(3);
+		Role roleAssistant = new Role(5);
+		userBaolq.addRole(roleEditor);
+		userBaolq.addRole(roleAssistant);
+
+		User savedUser = repo.save(userBaolq);
+
+		assertThat(savedUser.getId()).isGreaterThan(0);
+	}
+
+	// test list all
+	@Test
+	public void testListAllUser() {
+		Iterable<User> listUser = repo.findAll();
+		listUser.forEach(user -> System.out.println(user));
+
+	}
+
+	// test find by id
+	@Test
+	public void testGetById() {
+		User userAnnt = repo.findById(1).get();
+		System.out.println(userAnnt);
+		assertThat(userAnnt).isNotNull();
+	}
+
+	// test thong tin user
+	@Test
+	public void testUpdateUserDetails() {
+		User userAnnt = repo.findById(1).get();
+		userAnnt.setEnabled(true);
+		userAnnt.setEmail("Anntph18823@fpt.edu.vn");
+
+		repo.save(userAnnt);
+	}
+
+	// test role
+	@Test
+	public void testUpdateUserRole() {
+		User userBao = repo.findById(3).get();
+		Role roleEditor = new Role(3);
+		Role roleSaleperson = new Role(2);
+		userBao.getRoles().remove(roleEditor);
+		userBao.addRole(roleSaleperson);
+
+		repo.save(userBao);
+	}
+
+	// test delete
+	@Test
+	public void testDeleteUser() {
+		Integer userId = 3;
+		repo.deleteById(userId);
+
+	}
+	
+	//test Email
+	//test xem co tim duoc email theo ko
+		@Test
+		public void testGetUserByEmail() {
+			String email ="AnntPh18823@fpt.edu.vn";
+			User user = repo.getUserByEmail(email);
+			assertThat(user).isNotNull();
+		}
+
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head('User - Cizaya Admin')"/>
+
+<body>
+<div class="container-fluid">
+    <div th:replace="navigation :: menu"></div>
+    <div>
+        <h2>Manager Categories</h2>
+        <a th:href="@{/categories/new}" class="fas fa-user-plus fa-2x icon-black mr-2"></a>
+        &nbsp;|&nbsp;
+        <a th:href="@{/categories/export/csv}" class="fas fa-file-csv fa-2x icon-black mr-2"></a>
+        <a th:href="@{/categories/export/csv}" class="fas fa-file-excel fa-2x icon-black mr-2"></a>
+        <a th:href="@{/categories/export/csv}" class="fas fa-file-pdf fa-2x icon-black mr-2"></a>
+    </div>
+    <!--thong bao mesage-->
+    <div th:if="${message != null}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+    <!--search -->
+    <!--chung ta cung can gui 2 tham so sortField và sortDir vao day de sap xep khi tim kiem-->
+    <!--nho cap nhap vao phan trang-->
+    <div>
+        <form th:action="@{/categories/page/1}" class="form-inline m-3">
+            <input type="search" name="keyword" th:value="${keyword}" required class="form-control"/>
+            &nbsp;&nbsp;
+            <button type="submit" value="Search" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" value="Clear" class="btn btn-secondary" onclick="clearFilter()">
+                <i class="fas fa-eraser"></i>
+            </button>
+        </form>
+    </div>
+
+    <!--table-->
+    <div>
+        <table class="table table-bordered table-hover table-responsive-xl">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Category Image</th>
+                <th>Category Name</th>
+                <th>Alias</th>
+                <th>Enabled</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cat : ${listCategories}">
+                <td>[[${cat.id}]]</td>
+                <td>
+                photos
+                </td>
+                <td>[[${cat.name}]]</td>
+                <td>[[${cat.alias}]]</td>
+                <td>
+<!--                      dang bat nen dung duong link th:href="@{'/users/'+${users.id}+'/enabled/false' } de tat-->
+                    <a th:if="${cat.enabled == true}" class="fa-solid fa-check-circle fa-2x icon-limeblue"
+                       th:href="@{'/users/'+${cat.id}+'/enabled/false' }" title="Disable this user"></a>
+
+                    <!-- dang tat nen dung duong link th:href="@{'/users/'+${users.id}+'/enabled/true' } de bat-->
+                    <a th:if="${cat.enabled == false}" class="fa-solid fa-circle fa-2x icon-black"
+                       th:href="@{'/users/'+${cat.id}+'/enabled/true' }" title="Enable this user"></a>
+                </td>
+                <td>
+                    <a class="fa-solid fa-pen-to-square fa-2x icon-limegreen"
+                       th:href="@{'/categories/edit/'+${cat.id}}" title="Edit this user"></a>
+                    &nbsp;
+                    <!-- link-delete la ten lop dac biet de xoa lien ket-->
+                    <a class="fa-solid fa-trash fa-2x icon-black link-delete"
+                       th:href="@{'/categories/delete/' +${cat.id}}" th:userId="${cat.id}"
+                       title=" Delete this user"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments :: footer"></div>
+
+</div>
+
+</body>
+
+</html>

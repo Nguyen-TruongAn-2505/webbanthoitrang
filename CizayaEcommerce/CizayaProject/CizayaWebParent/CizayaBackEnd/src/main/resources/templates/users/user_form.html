@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head(${pageTitle})"/>
+
+<body>
+	<div class="container-fluid">
+		<div th:replace="navigation :: menu"></div>
+	</div>
+	<div>
+		<h2>Manager Users | [[${pageTitle}]]</h2>
+	</div>
+
+
+	<div>
+		<!--form dang nhap -->
+		<!--enctype="multipart/form-data" cho phep tai len tep cho bieu mau-->
+		<form th:action="@{/users/save}" method="post" style="max-with:700px; margin: 0 auto"
+			enctype="multipart/form-data" th:object="${user}" onsubmit="return checkEmailUnique(this);">
+			<!--kiem tra tinh duy nhat email nguoi dung-->
+			<input type="hidden" th:field="*{id}">
+			<div class=" border border-secondary rounted p-3">
+
+				<!--form Email -->
+				<div class="form-group row">
+					<div class="col-sm-2"></div>
+					<label class="col-sm-2 col-form-label">E-mail:</label>
+					<div class="col-sm-6">
+						<input type="email" class="form-control" th:field="*{email}" required minlength="7"
+							maxlength="128" />
+					</div>
+					<div class="col-sm-2"></div>
+				</div>
+
+				<!--form FirstName -->
+				<div class="form-group row">
+					<div class="col-sm-2"></div>
+					<label class="col-sm-2 col-form-label">First Name:</label>
+					<div class="col-sm-6">
+						<input type="text" class="form-control" th:field="*{firstName}" required minlength="2"
+							maxlength="45" />
+					</div>
+					<div class="col-sm-2"></div>
+				</div>
+
+				<!--form LastName -->
+				<div class="form-group row">
+					<div class="col-sm-2"></div>
+					<label class="col-sm-2 col-form-label">Last Name:</label>
+					<div class="col-sm-6">
+						<input type="text" class="form-control" th:field="*{lastName}" required minlength="2"
+							maxlength="45" />
+					</div>
+					<div class="col-sm-2"></div>
+				</div>
+
+				<!--form password -->
+				<div class="form-group row">
+					<div class="col-sm-2"></div>
+					<label class="col-sm-2 col-form-label">Password:</label>
+					<div class="col-sm-6">
+						<input th:if="${user.id == null}" type="password" class="form-control" th:field="*{password}"
+							required minlength="8" maxlength="20" />
+						<input th:if="${user.id != null}" type="password" class="form-control" th:field="*{password}"
+							minlength="8" maxlength="20" />
+					</div>
+					<div class="col-sm-2"></div>
+				</div>
+
+				<!--form Role -->
+				<div class="form-group row">
+					<div class="col-sm-2"></div>
+					<label class="col-sm-2 col-form-label">Roles:</label>
+					<div class="col-sm-6">
+						<th:block th:each="role : ${listRoles}">
+							<!--dung th:field anh xa voi roles trong user, in van ban cho checkbox bang roles.name, gia tri dau vao la roles.id-->
+							<input type="checkbox" th:field="*{roles}" th:text="${role.name}" th:value="${role.id}"
+								class="m-2" />
+							-<small>[[${role.description}]]</small>
+							<br />
+						</th:block>
+					</div>
+					<div class="col-sm-2"></div>
+				</div>
+
+				<!--form Enable -->
+				<div class="form-group row">
+					<div class="col-sm-2"></div>
+					<label class="col-sm-2 col-form-label">Enabled:</label>
+					<div class="col-sm-6" style="margin-top: 8px;">
+						<input type="checkbox" th:field="*{enabled}" />
+					</div>
+					<div class="col-sm-2"></div>
+				</div>
+
+
+				<!--form Photos -->
+				<div class="form-group row">
+					<div class="col-sm-2"></div>
+					<label class="col-sm-2 col-form-label">Photos:</label>
+					<div class="col-sm-6">
+						<input type="hidden" th:field="*{photos}" />
+						<input type="file" id="fileImage" name="image" accept="image/png, image/jpeg" class="mb-2" />
+
+						<!--thumbnail de hien thi cau hinh cua anh-->
+						<img id="thumbnail" alt="Photos preview" th:src="@{${user.photosImagePath}}"
+							class="img-fluid" />
+					</div>
+					<div class="col-sm-2"></div>
+
+				</div>
+
+				<div class="text-center">
+					<input type="submit" value="Save" class="btn btn-primary m-3" />
+					<input type="button" value="Cancel" class="btn btn-secondary" id="buttonCancel" />
+				</div>
+			</div>
+		</form>
+
+
+		<!-- Lam modal de canh bao khi trung email -->
+		<div class="modal fade text-center" id="modalDialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modalTitle">Warning</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<div class="modal-body">
+						<span id="modalBody"></span>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:replace="fragments :: footer"></div>
+	</div>
+
+
+	</div>
+
+	<script type="text/javascript">
+		moduleURL = "[[@{/users}]]";
+
+		//funtion check email
+		//  truoc khi save se co su kien onsummit checkEmailUnique voi duong dan url/users/check_email den UserRestController
+		//trong ham checkEmailUnique se lay gia tri cua email. va do spring securoty nen can lay gia tri cua csrf
+		// sau do tao duong dan params chua ca email va gia tri cua _csrf
+		// thuc hien goi ajax toi webservice bang cach dung phuong post cua jquery
+		//url, params va ham goi lai(duoc goi khi may khach nhan duoc phan hoi cua may chu) 
+		function checkEmailUnique(form) {
+			url = "[[@{/users/check_email}]]";
+			userEmail = $("#email").val();
+			//truong id dung khi update
+			userId = $("#id").val();
+			csrfValue = $("input[name ='_csrf']").val();
+			params = {id: userId, email: userEmail, _csrf: csrfValue};
+
+			$.post(url, params, function (response) {
+				if (response == "OK") {
+					form.submit();
+				} else if (response == "Duplicated") {
+					showModalDialog("Warning", " There is another user having the email" + userEmail);
+				} else {
+					showModalDialog("Error", "Unknow response from server , check email");
+				}
+				//jquery cung cung cap chuc nang goi lai cho phuong thuc post trong trg hop ko ket noi duoc den may chu
+			}).fail(function () {
+				showModalDialog("Error", "Could not connect to the server");
+			});
+			return false;
+		}
+
+		// ham hay de show modal va cac thanh phan cua modal
+		function showModalDialog(title, message) {
+			$("#modalTitle").text(title);
+			$("#modalBody").text(message);
+			$("#modalDialog").modal();
+		}
+	</script>
+	<script th:src="@{/js/common_form.js}"></script>
+</body>
+
+</html>

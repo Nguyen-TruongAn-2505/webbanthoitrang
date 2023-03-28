@@ -1,0 +1,62 @@
+package com.cizaya.admin.user;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.cizaya.common.entity.Role;
+import com.cizaya.common.entity.User;
+
+@Service
+public class UserService {
+
+	@Autowired
+	private UserRepository userRepo;
+
+	@Autowired
+	private RoleRepository roleRepo;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	// goi ra list User tu userRepo
+	public List<User> listAll() {
+		return (List<User>) userRepo.findAll();
+	}
+
+	// goi ra list Role tu roleRepo
+	public List<Role> listRoles() {
+		return (List<Role>) roleRepo.findAll();
+	}
+
+	// save user
+	public void save(User user) {
+		encodePassword(user);
+		userRepo.save(user);
+	}
+
+	// ma hoa mat khau , truyen vao user, set lai mat khau cho no qua ham
+	// passwordEncoder sau do gan lai vao ham save
+	private void encodePassword(User user) {
+		String encodedPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(encodedPassword);
+	}
+
+	// neu tra ve true email nguoi dung la duy nhat
+	public boolean isEmailUnique(String email) {
+		User userByEmail = userRepo.getUserByEmail(email);
+		return userByEmail == null;
+	}
+
+	public User get(Integer id) throws UserNotFoundException {
+		try {
+			return userRepo.findById(id).get();
+		} catch (NoSuchElementException e) {
+			throw new UserNotFoundException("Cound not find any user with id " + id);
+		}
+
+	}
+}
